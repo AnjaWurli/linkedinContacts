@@ -1,12 +1,10 @@
-console.log("JS Loaded");
-
 const state = {
   contacts: [],
 };
 
-function getData() {
+function getData(n) {
   const getUser = fetch(
-    "https://dummy-apis.netlify.app/api/contact-suggestions?count=8"
+    `https://dummy-apis.netlify.app/api/contact-suggestions?count=${n}`
   );
   getUser
     .then(function (response) {
@@ -57,11 +55,13 @@ function contactTemplate(contactData) {
   const pMore = document.createElement("p");
 
   const pMoreTxt = document.createTextNode(
-    "Mutual Connections" + contactData.mutualConnections
+    contactData.mutualConnections + " mutual connections"
   );
-
-  pMore.appendChild(pMoreTxt);
   pMore.classList.add("additional-information");
+  pMore.appendChild(pMoreTxt);
+  if (contactData.mutualConnections === 0) {
+    pMore.style.setProperty("visibility", "hidden");
+  }
 
   /** Connect Button */
   const connectButton = document.createElement("button");
@@ -83,19 +83,59 @@ function contactTemplate(contactData) {
 function render() {
   for (let contact of state.contacts) {
     const personElement = contactTemplate(contact);
-    console.log(personElement);
     document.querySelector(".suggestions").append(personElement);
   }
 }
 
-getData();
-/*
-<div class="card">
-  <button class="close"></button>
-  <img src="" alt="" />
-  <h2></h2>
-  <p class="profession"></p>
-  <p class="additional-information"></p>
-  <button class="connect"></button>
-</div>
-*/
+function render2() {
+  //pending invitations
+  const pendEl = document.createElement("p");
+  const pendText = document.createTextNode(" pending invitations");
+  const pendPre = document.createElement("span");
+  pendPre.innerText = "No";
+
+  pendEl.append(pendPre, pendText);
+  document.querySelector("header").append(pendEl);
+
+  //people you may know
+  const peopEl = document.createElement("p");
+  const peopText = document.createTextNode("People you may know in your area");
+
+  peopEl.append(peopText);
+  document
+    .querySelector("main")
+    .insertBefore(peopEl, document.querySelector(".suggestions"));
+}
+
+getData(8);
+render2();
+
+let penNum = 0;
+document.body.addEventListener("click", (e) => {
+  //remove
+  if (e.target.classList.value === "close") {
+    e.target.parentElement.remove();
+    getData(1);
+  }
+
+  //connect/pending
+  if (e.target.classList.value === "connect") {
+    penNum++;
+    document.querySelector("span").innerHTML = penNum;
+    e.target.innerHTML = "Pending";
+
+    e.target.classList.toggle("connect");
+    e.target.classList.toggle("pending");
+
+    console.log(e.target, penNum);
+  } else if (e.target.classList.value === "pending") {
+    penNum--;
+    document.querySelector("span").innerHTML = penNum;
+    if (penNum === 0) {
+      document.querySelector("span").innerHTML = "No";
+    }
+    e.target.innerHTML = "Connect";
+    e.target.classList.toggle("connect");
+    e.target.classList.toggle("pending");
+  }
+});

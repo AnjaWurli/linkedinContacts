@@ -2,19 +2,22 @@
 *::after,
 *::before {
   box-sizing: border-box;
+  _border: 2px solid red;
 }
 
 html {
   min-height: 100%;
   background-color: lightgray;
   font-family: sans-serif;
+  --bghover: rgb(0, 0, 0, 0);
 }
 
 body {
   margin: 0;
 }
 
-section {
+main,
+header {
   margin: 1rem;
   border-radius: 10px;
   height: fit-content;
@@ -22,26 +25,31 @@ section {
   padding: 1rem;
 }
 
-.pending {
-  height: 5rem;
-}
-
 .suggestions {
   display: grid;
-  grid-template-columns: repeat(4, 20vw);
-  gap: 5vw;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 24rem);
+  gap: 1vw;
+  align-items: stretch;
 }
 
 .card {
   border: 2px solid lightgray;
   border-radius: 10px;
   position: relative;
-  aspect-ratio: 2/3;
+  height: content;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-size: 100%;
   background-repeat: no-repeat;
+  background-position-y: -16rem;
+  color: gray;
+}
+
+.card:hover img {
+  width: 70%;
+  margin-top: 0.5rem;
 }
 
 .close {
@@ -53,6 +61,7 @@ section {
   right: 10px;
   top: 10px;
   border: none;
+  cursor: pointer;
 }
 
 .close::before {
@@ -64,7 +73,8 @@ section {
   font-size: x-large;
 }
 
-.connect {
+.connect,
+.pending {
   color: dodgerblue;
   border: 2px solid dodgerblue;
   border-radius: 50px;
@@ -72,7 +82,10 @@ section {
   font-size: 1.3rem;
   padding: 0.5rem;
   width: 80%;
-  margin: 2rem;
+  margin: 1rem;
+  position: absolute;
+  bottom: 10px;
+  cursor: pointer;
 }
 
 img {
@@ -80,4 +93,25 @@ img {
   width: 60%;
   aspect-ratio: 1/1;
   margin-top: 1.5rem;
+}
+
+.additional-information::before {
+  content: "\26AD   ";
+  font-size: 1.5rem;
+}
+
+.profession {
+  margin: 0;
+}
+h2 {
+  margin-bottom: 0;
+  color: black;
+}
+
+.see {
+  font-weight: bold;
+  color: gray;
+  display: inline;
+  position: absolute;
+  right: 40px;
 }
